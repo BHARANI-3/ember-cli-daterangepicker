@@ -51,6 +51,13 @@ export default Component.extend({
         }
         //TODO need to check with dateRanges in o365attributes for corresponding id for custom range.
         if (this.get('singleDatePicker') === false && isPresent(chosenLabel) && chosenLabel === 'Custom Range') {
+            for(let dynValKey in this.showDynamicDaysOption)
+            {
+                if(isPresent(this.showDynamicDaysOption[dynValKey]))
+                {
+                    return  `${dynValKey} ${this.showDynamicDaysOption[dynValKey]} Days`;
+                }
+            }
             if (!isEmpty(start) && !isEmpty(end)) {
                 if(moment.isMoment(start) && start._f === this.serverFormat){
                     return start.format(format) + this.get('separator') + end.format(format);
@@ -139,6 +146,7 @@ export default Component.extend({
 	subLabel: "",
 	customClass: "",
     showSelectByDefault:false,
+    showDynamicDaysOption: {},
 
     didReceiveAttrs() {
         this._super(...arguments);
@@ -207,7 +215,6 @@ export default Component.extend({
         this._super(...arguments);
 
         cancel(this._setupTimer);
-
         if (this.get('removeDropdownOnDestroy')) {
             if(isPresent(this.datePickerDropDownId))
                 $('#'+this.datePickerDropDownId).remove();
@@ -249,7 +256,8 @@ export default Component.extend({
             'dateLimit',
             'parentEl',
 			'subLabel',
-			'customClass'
+			'customClass',
+            'showDynamicDaysOption',
         );
 
         let localeOptions = this.getProperties(
